@@ -1,0 +1,62 @@
+----------------------------------------------------------------------
+YASA README
+
+
+When you use Yasa in your research, we would appreciate that you include
+a citation to the relevant article:
+
+@conference {yasa2013,
+    title = {Yet Another Fast, Robust and Open Source Sentence Aligner. Time to Reconsider Sentence Alignment?},
+    booktitle = {XIV Machine Translation Summit},
+    year = {2013},
+    month = {Sept.},
+    address = {Nice, France},
+    author = {Lamraoui, Fethi and Langlais, Philippe}
+}
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+1. YASA Description
+----------------------------------------------------------------------
+
+YASA is a program that aligns texts, which are translations or each other, at
+the sentence level.  YASA does not take for input raw text, but tokenized
+texts.  The tokenization format are well documented in the man page of YASA
+
+----------------------------------------------------------------------
+2. YASA history
+----------------------------------------------------------------------
+
+At first, YASA was written by Philippe Langlais, after, this version was refactored by 
+Alexander Patry and Fethi Lamraoui improved it. 
+
+----------------------------------------------------------------------
+3. YASA installation
+----------------------------------------------------------------------
+
+The basic installation process is described in the INSTALL file.  
+
+----------------------------------------------------------------------
+4. Program usage
+----------------------------------------------------------------------
+
+Because the man page does a good job at describing the program's usages, 
+details are not explained here, but to whet your appetite, here are a
+examples of YASA's invocation.
+
+	yasa -i c -o f source.ces target.ces result
+
+will align two texts that are tokenized in the cesAna format and will output
+the alignment in a user friendly format.
+
+	yasa -i o -e c -b 20 -o c source.ospl target.ospl
+
+will align two texts that are tokenized in the One Sentence Per Line format
+
+----------------------------------------------------------------------
+5. YASA algorithms
+----------------------------------------------------------------------
+
+YASA use a dynamic programming algorithm which is described in the program's man
+page.

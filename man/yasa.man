@@ -1,0 +1,710 @@
+.\" Process this file with
+.\" groff -man -Tascii yasa 1.1
+.\"
+.TH  yasa 1 "SEPTEMBER 2013" Linux "User Manuals"
+.SH NAME
+yasa \- Builds a bi-text from two translations of a text.
+.SH SYNOPSIS
+.B yasa [ options... ] 
+.I sourcefile
+.I targetfile
+.BI [ alignmentfile ]
+.SH DESCRIPTION
+.I yasa
+aligns two translations of a text in order to produce a bi-text.  It handles
+many file formats and supports personal lexicons.  It also uses highly
+configurable dynamic programming algorithms to find the optimal alignment
+( These algorithms are explained more in details below ).
+.P
+The source and target files are specified by the two first arguments and the 
+results are printed in
+.IR alignmentfile .
+If
+.I alignmentfile
+is omitted, results are printed on the standard output and the
+.B verbose
+messages are redirected to standard error.
+.P
+If you find yasa helpful for your research, we would appreciate you add
+a citation to our research. Here is the BibTeX entry.
+.P
+@conference {yasa2013,
+.br
+    title = {Yet Another Fast, Robust and Open Source Sentence Aligner. Time to Reconsider Sentence Alignment?},
+    booktitle = {XIV Machine Translation Summit},
+    year = {2013},
+    month = {Sept.},
+    address = {Nice, France},
+    author = {Lamraoui, Fethi and Langlais, Philippe}
+.br
+}
+
+.SH OPTIONS
+For ease of use, options are grouped by categories.  The options that need an
+argument are generally followed by 
+.IR n ,
+.I r
+or
+.IR s ;
+which stand for, in order, an integer, a real number or a special value.
+.SS INPUT
+This section contains options regarding the input files.
+.IP "-i \fIs\fP"
+Sets the tokenization format of the input texts ( default =
+.I r 
+).
+.IP
+.I s
+must be one of the following : 
+.B a 
+for
+.I Arcade
+,
+.B c
+for
+.I cesAna
+,
+.B o
+for
+.I One Sentence Per Line
+or
+.B r
+for
+.IR RALI ( GLM )
+tokenization format.  For more information on the tokenization formats, see the
+INPUT FORMATS section below.
+.IP "-z \fIs\fP"
+Sets the input filter to apply ( default = 
+.I n 
+).
+.IP
+.I s
+must be one of the following :
+.B n
+for
+.I none
+,
+.B g
+for
+.IR gzip .
+.B zcat 
+must be in your 
+.B PATH 
+in order to apply a gzip filter.
+.SS LEXICONS
+.I yasa
+supports two types of lexicons, explicits and implicits.  Explicits lexicons
+are defined by the user while implicit ones are deduced from the texts'
+content.  To build its implicit lexicon,
+.I yasa
+tries to find words that are cognates ( share some lexical properties ).
+.IP "-c \fIs\fP"
+Sets the cognate type ( default =
+.I  p
+).
+.IP
+.I s
+must be one of the following :
+.B n
+for 
+.I No Cognate
+,
+.B p
+for 
+.I Simard Cognates
+or
+.B w
+for 
+.IR "Word Cognates" .
+For more informations on cognate formats, see the COGNATE
+FORMATS section below.
+.IP "-L \fIlexiconfile\fP"
+Specify a file containing an explicit lexicon.  The file must contains one
+entry per line.  Each entry consists of a word in the source language followed 
+by a space or a tabulation and a word in the target language.
+
+Example of a lexicon containing two entries:
+.IP
+apple pomme
+.br
+monkey singe
+.IP
+Use the
+.I -L
+option for each lexicon to use.
+.IP "-l \fIn\fP"
+Sets the minimum length of strictly alphabetic words that are considered in 
+the cognate finding process ( default = 4 ).
+.IP "-p \fIn\fP"
+Sets the length of the prefix for Simard cognates ( default = 4 ).
+.SS SEARCH SPACE
+In order to avoid useless computing,
+.I yasa
+can delimit the space where it searches the optimal alignments. 
+.I yasa
+uses a discrete bi-dimensional search space, where one axis represents the
+sentences of the source text and the other the sentences of the target 
+text.
+
+A search space is delimited by tracing a beam between passage points.  The way
+to fix those passage points can be specified with the
+.I -e
+option.  For more informations regarding search spaces, see the SEARCH SPACE
+TYPES section below.
+.IP "-b \fIn\fP"
+Sets the radius of the beam sent between passage points ( default = 30 ).
+.IP -d
+Sets the maximum deviance of a passage point from the search space diagonal
+where 0 disable the option (
+default = 0 ).
+.IP
+Have sens only when using cognate search space.  This option avoid useless 
+computing when aligning texts that are almost parallel.
+.IP "-e \fIs\fp"
+Select the way to compute passage points( default = c ).
+.IP
+.I s
+must be one of the following :
+.B b
+for a diagonal beam or
+.B c
+to find passage points using cognates with low frequency ( see
+.I -n
+options ).
+.IP "-n \fIn\fP"
+Sets the maximum frequency that a word can have to be considered as a 
+possible passage point.
+.IP "-R \fIr\fp"
+Sets the cost of a return when finding passage points.
+.IP "-r \fIn\fp"
+Sets the maximum number of returns allowed when finding passage points.
+.SS SCORE FUNCTION
+The score function is the core of the aligning program.  It decides what is a
+good alignment and what is not.  For more informations regarding the score
+functions, see the SCORE FUNCTION DESCRIPTIONS section below.
+.IP "-a \fIalignment\fP"
+Add or modify a possible alignment.  An alignment has the form :
+.IP
+<Number of source sentences>-<Number of target sentences>-<Probability>
+.IP
+Default alignments :
+
+0-1-0.0099
+.br
+1-0-0.0099
+.br
+1-1-0.89
+.br
+1-2-0.089
+.br
+2-1-0.089
+.br
+2-2-0.011
+.IP
+Use this option for each new alignment.
+.IP "-F \fIr\fP"
+Sets the correction to apply when in FullFelipe mode.  
+.I r 
+divides a part of the score of the alignments having 0 source or target 
+sentence.  See the
+.I -f
+option.
+.IP "-f \fIs\fP"
+Sets the FullFelipe mode ( default = a ).
+.IP
+.I s
+must be one of the following :
+.B n
+for
+.I no correction
+,
+.B c
+to apply the correction only on the
+.I Church and Gale
+part of the score,
+.B s
+to apply the correction only on the
+.I Simard
+part of the score or 
+.B a
+to apply the correction on the whole score. See the
+.I -F
+option.
+.IP "-M \fIr\fP"
+Sets the weight of the penalty in the Church and Gale score function ( default = 1 ).
+.IP "-m \fIf\fP"
+Sets the weight of the match in the Church and Gale score function ( default =
+0.2 )
+.IP "-P \fIr\fP"
+Sets the average number of characters in the target language per character in
+the source language ( default = 1 ).
+.IP "-S \fIr\fP"
+Sets the variance of the number of characters in sentences ( default = 6.8 ).
+.IP "-s \fIs\fP"
+Sets the score function ( default = f ).
+.IP
+.I s
+must be one of the following :
+.B c
+for 
+.I Church and Gale score
+or
+.B f
+for
+.IR "Felipe score" .
+.IP "-T \fIr\fP"
+Sets the probability that a word of a source text's segment has a cognate in 
+a segment of the target text if the two segments are not mutual translations
+( default = 0.09 ).
+.IP "-t \fIr\fP"
+Sets the probability that a word of a source text's segment has a cognate in 
+a segment of the target text if the two segments are mutual translations
+( default = 0.3 ).
+.IP "-W \fIr\fP"
+Sets the weight of the Simard score in the Felipe score ( default = 0.85 ).
+.IP "-w \fIr\fP"
+Sets the weight of the Church and Gale score in the Felipe score ( default = 1
+).
+.SS OUTPUT
+This section contains informations regarding the outputted alignment.
+.IP "-o \fIs\fP"
+Sets the format of the outputted alignment ( default = r ).
+.IP
+.I s
+must be one of the following :
+.B a
+for the 
+.I Arcade
+output format, 
+.B c
+for the 
+.I cesAlign
+output format, 
+.B f
+for a 
+.I human friendly 
+output format or
+.B r
+for the 
+.I RALI
+output format.  For more informations regarding output formats, see the OUTPUT
+FORMATS section below.
+.SS MISCELLANEOUS
+.IP -h
+Display the online help message.
+.IP -V
+Sets verbosity level to high.
+.IP -v
+Sets verbosity level to normal.
+.SH INPUT FORMATS
+This section describes the different file formats that are accepted by
+.I yasa
+.RI ".  The simplest one is"
+.I ONE SENTENCE PER LINE
+.RI .
+.SS ARCADE
+The arcade format was the one used during the ARCADE project 
+( http://www.up.univ-mrs.fr/~veronis/arcade/ ).  It is a SGML tagged text
+where each word stands on its own line.  
+
+Here is an example :
+
+<text>
+.br
+<divid="d1">
+.br
+<pid="d1p1">
+.br
+<s id="d1p1s1">
+.br
+Here
+.br
+is
+.br
+a
+.br
+pretty
+.br
+nice
+.br
+arcade
+.br
+example
+.br
+.RI .
+.br
+</s>
+.br
+<s id="d1p1s2">
+.br
+Sorry
+.br
+,
+.br
+now
+.br
+I
+.br
+am
+.br
+out
+.br
+of
+.br
+creativity
+.br
+.RI .
+.br
+</s>
+.br
+</p>
+.br
+</div>
+.br
+</text>
+
+.I yasa
+processes the text between the
+.I <text>
+and
+.I </text>
+tags.  All the text outside these is ignored.  The recognized tags are the
+following :
+.IP "<divid=\*(lq\fIid\fP\*(rq>"
+Marks the beginning of a division, where
+.I id
+is the unique identifier for the division.
+.IP </div>
+Marks the end of a division.
+.IP "<pid=\*(lq\fIid\fP\*(rq>"
+Marks the beginning of a paragraph, where
+.I id
+is the unique identifier of the division.
+.IP </p>
+Marks the end of a paragraph.
+.IP "<s id=\*(lq\fIid\fP\*(rq>"
+Marks the beginning of a sentence where 
+.I id
+is a unique identifier for the sentence.
+.IP </s>
+Marks the end of a sentence.
+.IP <text>
+Marks the beginning of the text.
+.IP </text>
+Marks the end of the text.
+.SS CESANA
+A complete description of the format can be found at 
+http://www.cs.vassar.edu/CES/.  Unfortunately, only a subset of the
+standard is implemented in
+.I yasa
+.IR .
+Like ARCADE, cesAna is a SGML tagged text.  Except the name of the tags, the 
+difference between cesAna and arcade is that the former does not require you 
+to split explicitly the tokens.  But 
+.I yasa
+is not really good at splitting tokens, so it is recommended to use another 
+format if possible.
+
+Here is an example of a cesAna text :
+
+<!DOCTYPE CESANA PUBLIC "-//CES//DTD cesAna//EN" >
+.br
+<CESANA VERSION="1.12">
+.br
+<CHUNKLIST>
+.br
+<CHUNK>
+.br
+<PAR>
+.br
+<S ID="150">
+.br
+CesAna format doesn't require you to explicitly split the word tokens.
+.br
+</S>
+.br
+<S ID="200">
+.br
+Because yasa is not that good at that task, maybe it's better to use another
+format when possible.
+.br
+</S>
+.br
+</PAR>
+.br
+</CHUNK>
+.br
+</CHUNKLIST>
+.br
+</CESANA>
+
+.I yasa
+processes the text between the 
+.I <CHUNKLIST>
+and 
+.I </CHUNKLIST>
+tags.  All the text outside these is ignored.  The recognized tags are the
+following :
+.IP "<CHUNK>"
+Marks the beginning of a division.
+.IP </CHUNK>
+Marks the end of a division.
+.IP <CHUNKLIST>
+Marks the beginning of the text.
+.IP </CHUNKLIST>
+Marks the end of the text.
+.IP "<PAR>"
+Marks the beginning of a paragraph.
+.IP </PAR>
+Marks the end of a paragraph.
+.IP "<S ID=\*(lq\fIid\fP\*(rq>"
+Marks the beginning of a sentence where 
+.I id
+is a unique identifier for the sentence.
+.IP </S>
+Marks the end of a sentence.
+.SS ONE SENTENCE PER LINE
+This is the simplest format that 
+.I yasa
+supports.  There are two rules, each sentence stands on its line and words are
+separated by spaces.
+
+Example : 
+
+This is the first sentence .
+.br
+This is the second , I am almost done .
+.br
+And here comes the last .
+.SS RALI ( GLM )
+This is a format inspired from the one in used at the University of Montreal.
+A file is composed of tokens that stands on their own line.
+
+Example :
+Text that will never be processed. 
+.br
+{sect}
+.br
+{para}
+.br
+{sent}
+.br
+This 
+.br
+is 
+.br
+the 
+.br
+first 
+.br
+sentence 
+.br
+.RI .
+.br
+{sent}
+.br
+As 
+.br
+you 
+.br
+can 
+.br
+imagine 
+.br
+,
+.br
+this 
+.br
+is 
+.br
+the 
+.br
+second 
+.br
+one 
+.br
+.RI . 
+.br
+{EOF}
+.br
+Text that will never be processed. 
+
+.I yasa
+does not process the lines before the first 
+.I {sent} 
+and after the 
+.I {EOF} 
+tags.
+The recognized tags are the following :
+
+.IP {sect}
+Marks the beginning of a section or a  division. 
+.IP {para}
+Marks the beginning of a paragraph. 
+.IP {sent}
+Marks the beginning of a sentence.
+.IP {EOF}
+Marks the end of the file.
+.SH SEARCH SPACE TYPES
+The search space tells 
+.I yasa
+which alignments to test.  Without search space, every source sentences
+would be scored with every target sentences.
+
+For 
+.IR yasa ,
+a search space is a bi-dimensional array that has a dimension of ( Number of
+source sentences ) * ( Number of target sentences ).  A search space
+delimitation algorithm marks the cells to be scored.  The two algorithms
+supported by 
+.I yasa
+act almost the same way.  They fix passage points, pass a beam of variable
+radius ( see 
+.I -b
+option ) by all these fix points and mark the cell that are on that beam.
+.SS BEAM
+The beam search space sets two passage points, one at each corner of the array.
+It is the simplest and cheapest search space marking algorithm.
+.SS COGNATES
+This dynamic programming algorithm fixes passage points at sentences that contains 
+equivalent words which have a low frequency.  It does not necessarily pass by all 
+the points, it can jump over a certain number of consecutive points ( see
+.I -r
+option ), but jumping over a point has a cost ( see
+.I -R
+option ).
+
+This algorithms is more reliable to discover blocks that are present in one
+text, but not the other.  It does more calculation than the BEAM algorithm, 
+but it is more reliable when a beam of smaller radius is sent.
+.SH SCORE FUNCTION DESCRIPTIONS
+The core task of the program is to score an alignment.  This task is
+dictated by the score function.
+.SS CHURCH AND GALE
+The Church and Gale score function is a classic score function based on the
+sentences' length.  It does not care of the lexical informations that are
+contained in the sentences.
+
+The score contains two parts : the match, which is computed from the physical
+attributes of the sentences, and the penalty, which depends of the nature of
+the alignment ( a 2-1 alignment normally have an higher penalty than a 1-1
+alignment ).  These two parts are weighted and added.  The weight of the match
+and the penalty can be set with the
+.IR -m " and " -M
+options.
+.SS FELIPE
+The Felipe score is a weighted sum of the Church and Gale and the Simard
+scores.  It also implements a FullFelipe mode, which allows to diminish the
+penalty of the alignments that have the form 0-N or N-0.
+
+The FullFelipe mode specifies the part of the score to be corrected and the 
+FullFelipe correction is a number by which the specified part of the score
+will be divided.  These two parameters can be changed with the
+.IR -f " and " -F
+options.  To change the weights of the Church and Gale or Simard part of the
+scores, see the
+.IR -w " and " -W
+options.
+.SS SIMARD
+The Simard score is not explicitly an option because it is not very useful
+by it self.  It scores an alignment based on the equivalent words that are found in
+the source and the target segments.  See the LEXICONS subsection of the OPTIONS
+section above to know how to define equivalent words.  This score can be
+configured with the
+.IR -t " and the " -T
+options.
+.SH OUTPUT FORMATS
+The output format is the way the alignment is presented.
+.SS ARCADE
+This output format was the one used in the ARCADE project.  Each line
+contains an alignment.  The lines have the form :
+
+<link xtargets="source sentence ids;target sentence ids" 
+certainty="subjective float number"></link>
+
+Example :
+
+<link xtargets="d1p1s1;d1p1s1" certainty="0.4"></link>
+.br
+<link xtargets="d1p1s2;d1p1s2 d1p1s3" certainty="2.3"></link>
+.br
+<link xtargets="d1p1s3 d1p1s4;d1p1s4" certainty="1.8"></link>
+.br
+<link xtargets=";d1p1s5" certainty="4.5"></link>
+.br
+<link xtargets="d1p1s4;" certainty="5.0"></link>
+
+If the input format that were use has no support for sentence identifiers,
+.I yasa
+will assign them automatically.
+.SS CESALIGN
+A complete description of the format can be found at 
+http://www.cs.vassar.edu/CES/.  Unfortunately, only a subset of the
+standard is implemented in
+.I yasa
+.RI .
+
+CesAlign is almost the same as ARCADE, excepts that a header and a footer are
+printed.  
+
+Here is the previous example in cesAlign format :
+
+<!DOCTYPE CESALIGN PUBLIC "-//CES//DTD cesAlign//EN" []>
+.br
+<cesAlign version="1.14">
+.br
+<linkList>
+.br
+<linkGrp>
+.br
+<link xtargets="d1p1s1;d1p1s1" certainty="0.4"></link>
+.br
+<link xtargets="d1p1s2;d1p1s2 d1p1s3" certainty="2.3"></link>
+.br
+<link xtargets="d1p1s3 d1p1s4;d1p1s4" certainty="1.8"></link>
+.br
+<link xtargets=";d1p1s5" certainty="4.5"></link>
+.br
+<link xtargets="d1p1s4;" certainty="5.0"></link>
+.br
+</linkGrp>
+.br
+</linkList>
+.br
+</cesAlign>
+.SS HUMAN FRIENDLY
+The name says it all.  Mainly for testing purposes.
+.SS RALI
+This is the format used in the RALI department of the University of Montreal.
+Each alignment stands on one line and has the form :
+
+.IR "length_source" \- "length_target score"
+
+where 
+.I length_source 
+and 
+.I length_target 
+are respectively the number of source
+and target sentences.  The score can be anything and should not be considered.
+
+Here is the previous example in RALI output format :
+
+1-1 0.4
+.br
+1-2 2.3
+.br
+2-1 1.8
+.br
+0-1 4.5
+.br
+1-0 5.0
+.SH EXAMPLES
+This section puts it all together with
+.I yasa
+usage examples.
+.SS Default behavior
+yasa source_text target_text resultant_alignment_file
+.SS Classical Church and Gale alignment
+yasa -s c -M 1 -m 1 source_text target_text resultant_alignment_file
+.SS Cognate search space using a beam of radius 20
+yasa -e c -b 20 source_text target_text resultant_alignment_file
