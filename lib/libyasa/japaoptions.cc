@@ -247,7 +247,7 @@ const std::string JapaOptions::OPTIONS_HELP = std::string( "" ) +
        OUTPUT_FORMAT_DEFAULT + " )\n" +
 "          " + OUTPUT_FORMAT_ARCADE   + " Arcade output format\n" +
 "          " + OUTPUT_FORMAT_CESALIGN + " CesAlign output format\n" +
-"          " + OUTPUT_FORMAT_FRIENDLY + " Human friendly output\n" +
+// "          " + OUTPUT_FORMAT_FRIENDLY + " Human friendly output\n" +
 "          " + OUTPUT_FORMAT_RALI     + " RALI output format\n" +
 "          " + OUTPUT_FORMAT_SCORE    + " prints the final alignment score\n" +
 "\n" +
