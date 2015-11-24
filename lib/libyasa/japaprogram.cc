@@ -69,50 +69,6 @@ void setPtr( std::auto_ptr< T >& autoptr, S* ptr )
 }
 
 // ------------------------------------------------------------------------ //
-
-void JapaProgram::calc()
-  {
-		//tests
-	    //wstring s2(L"ça va être ici aaaaaaaaaaaaaaa");
-	    //wcout << "s2 is: " << s2 << " et la taille est " << s2.size()<< endl;
-
-	    //wcout << "j'ai: " << m_source -> getSentenceCount() <<
-		//" Phrases source et: " <<  m_source -> getWordCount() <<
-		//" mots source." << " et: " << m_target -> getSentenceCount() <<
-		//" Phrases cible et: " << m_target -> getWordCount() << " mots source." << endl;
-		//wcout << " la longueur de la premiere phrase source est: " << m_source -> getSentenceLength(0)<< endl;
-		//wcout << " la longueur de la premiere phrase cible est: " << m_target -> getSentenceLength(0)<< endl;
-
-		TextDictionary& srcDict = m_source -> getDictionary();
-		TextDictionary::iterator srcIter;
-		WordInfo::Synonyms synonyms;
-		WordInfo::Synonyms::iterator synIter;
-
-
-		//for( srcIter = srcDict.begin(); srcIter != srcDict.end(); srcIter++ )
-		//{
-		//    wcout << "Le Mot est: " << srcIter -> first << endl;
-		//	if(srcIter -> second.hasSynonym())
-		//	{
-		//		// << "tssssssssssssssssssssssssssssssssssssss" << endl;
-		//		synonyms = srcIter -> second.getSynonyms();
-		//		wcout << "Les cognates sont: " << endl;
-		//		for( synIter = synonyms.begin(); synIter != synonyms.end(); synIter++ )
-		//		 {
-		//				wcout << ( *synIter ) -> getWord() << endl;
-		//		 }
-		//	}else
-		//	{
-		//		wcout << srcIter -> first << " n'a pas de cognates" << endl;
-		//	}
-
-		//}
-
-		//cout << "Fin calcul" << endl;
-		//tests
- }
-
-// ------------------------------------------------------------------------ //
 JapaProgram::JapaProgram() : m_solutionStream( NULL )
 {}
 
@@ -142,7 +98,6 @@ void JapaProgram::run()
     	initStreams();
         initText();
         initCognate();
-        calc();
 
         initSynonymDictionaries();
         initSearchSpace();

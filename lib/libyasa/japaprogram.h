@@ -89,10 +89,6 @@ public :
      * \endenglish
      */
     void run();
-    /**
-         * \ma partie
-         */
-    void calc();
     
 private :    
     /**
