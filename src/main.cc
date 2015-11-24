@@ -31,8 +31,6 @@ limitations under the License.
 #include <exception>
 #include <japaprogram.h>
 
-using namespace std;
-
 /**
  * Fonction principale.  Lance le programme yasa.
  *
