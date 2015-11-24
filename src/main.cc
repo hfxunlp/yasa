@@ -45,13 +45,25 @@ int main( int argc, char** argv )
     
     try
     {
-    	std::locale::global(std::locale("en_US.UTF-8"));
-    	//std::locale::global(std::locale(""));
-    	//std::setlocale(LC_ALL, "fr_CA");
-     	//std::setlocale(LC_ALL, "UTF-8"); // the C locale will be the UTF-8 enabled English
-    	//std::setlocale(LC_NUMERIC, "de_DE");   // decimal dot will be German
-    	//std::setlocale(LC_TIME, "ja_JP");      // date/time formatting will be Japanese
+        // must set a UTF-8 locale
+        std::locale *theLocale = NULL;
 
+        try
+        {
+            theLocale = new std::locale("en_US.UTF-8");
+        }
+        catch( std::exception& ex )
+        {
+            theLocale = new std::locale("");
+            std::cerr << "Could not find locale en_US.UTF-8 on your system.\nReverting to the system's "
+                      << theLocale->name()
+                      << ".\nIf the latter is not UTF-8, the program will not behave correctly.\n"
+                      << "See the documentation."
+                      << std::endl;
+        }
+
+        std::locale::global(std::locale(*theLocale));
+        // end locale
 
         japa::JapaProgram program;
 
