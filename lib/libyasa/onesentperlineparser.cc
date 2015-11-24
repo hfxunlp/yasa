@@ -45,7 +45,6 @@ bool OneSentPerLineParser::operator() ( std::wistream& in, Text& text )
     text.pushDivision();
     text.pushParagraph();
 
-    //cout<< "le local est" << in.getloc() << endl;
     in.getloc();
 
     while( getline( in, line ) )
@@ -53,14 +52,11 @@ bool OneSentPerLineParser::operator() ( std::wistream& in, Text& text )
         // Analyse chaque phrase
         std::wistringstream linestream( line );
 
-        //wcout << L"la phrase est " << line << endl;
-
-        text.pushSentence( toString1( id ) );
+         text.pushSentence( toString1( id ) );
 
         while( linestream >> word )
         {
             // Analyse chaque mot
-        	//wcout << "le mot est " << word << endl;
             text.pushWord( word );
         }
         
