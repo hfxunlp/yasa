@@ -19,6 +19,8 @@ limitations under the License.
 #ifndef JAPA_SET_SEARCH_SPACE_H
 #define JAPA_SET_SEARCH_SPACE_H
 
+#include <cstddef>
+
 #include <functional>
 #include <set>
 
