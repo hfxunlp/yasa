@@ -29,6 +29,7 @@ limitations under the License.
 #include <clocale>
 
 #include <exception>
+#include <stdexcept>
 #include <japaprogram.h>
 
 /**
@@ -64,6 +65,10 @@ int main( int argc, char** argv )
 
         std::locale::global(std::locale(*theLocale));
         // end locale
+
+        if (argc == 1) {
+            throw std::runtime_error("No arguments specified.");
+        }
 
         japa::JapaProgram program;
 
