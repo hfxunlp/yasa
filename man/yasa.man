@@ -280,10 +280,6 @@ output format,
 for the 
 .I cesAlign
 output format, 
-.B f
-for a 
-.I human friendly 
-output format or
 .B r
 for the 
 .I RALI
@@ -672,8 +668,6 @@ Here is the previous example in cesAlign format :
 </linkList>
 .br
 </cesAlign>
-.SS HUMAN FRIENDLY
-The name says it all.  Mainly for testing purposes.
 .SS RALI
 This is the format used in the RALI department of the University of Montreal.
 Each alignment stands on one line and has the form :
