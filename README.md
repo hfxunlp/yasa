@@ -40,7 +40,7 @@ To get help, read the man page or run
 
 Here are a few examples of YASA's invocation.
 
-    yasa -i o -o o source.ospl target.ospl result.alignment
+    yasa -i o -o r source.ospl target.ospl result.alignment
     
 will align two texts that are tokenized in the one sentence per line format and
 output a result (result.alignment) showing the sentence alignment. The format
