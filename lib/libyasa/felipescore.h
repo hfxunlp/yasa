@@ -353,7 +353,7 @@ public :
      * The default weight of the Church and Gale's score function.
      * \endenglish
      */ 
-    static const double DEFAULT_CHURCH_GALE_WEIGHT = 1;
+    static constexpr double DEFAULT_CHURCH_GALE_WEIGHT = 1;
 
     /** 
      * \french
@@ -364,7 +364,7 @@ public :
      * The default weight of the Simard's score function.
      * \endenglish
      */
-    static const double DEFAULT_SIMARD_WEIGHT = 0.85;
+    static constexpr double DEFAULT_SIMARD_WEIGHT = 0.85;
 
     /** 
      * \french
@@ -377,7 +377,7 @@ public :
      * are traductions of each other.
      * \endenglish
      */
-    static const double DEFAULT_CPT = 0.3;
+    static constexpr double DEFAULT_CPT = 0.3;
 
     /**
      * \french
@@ -390,7 +390,7 @@ public :
      * are not traductions of each other.
      * \endenglish
      */
-    static const double DEFAULT_CPNT = 0.09;
+    static constexpr double DEFAULT_CPNT = 0.09;
 
     /** 
      * \french
@@ -412,7 +412,7 @@ public :
      * Default FullFelipe correction.
      * \endenglish
      */
-    static const double DEFAULT_CORRECTION = 2;
+    static constexpr double DEFAULT_CORRECTION = 2;
 
 protected :
     

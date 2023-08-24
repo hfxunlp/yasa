@@ -70,7 +70,7 @@ public :
      * The default cost of a return. 
      * \endenglish
      */
-    static const double DEFAULT_RETURN_COST = 5;
+    static constexpr double DEFAULT_RETURN_COST = 5;
     
     /**
      * \french

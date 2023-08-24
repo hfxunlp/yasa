@@ -273,7 +273,7 @@ public :
      * Substitution ( 1-1 ) probability as in [Church & Gale].
      * \endenglish
      */
-    static const double DEFAULT_PROB_11 = 0.89;
+    static constexpr double DEFAULT_PROB_11 = 0.89;
 
     /** 
      * \french
@@ -284,7 +284,7 @@ public :
      * Insertion ( 0-1 ) probability as in [Church & Gale].
      * \endenglish
      */
-    static const double DEFAULT_PROB_01 = 0.0099;
+    static constexpr double DEFAULT_PROB_01 = 0.0099;
 
     /** 
      * \french
@@ -295,7 +295,7 @@ public :
      * Deletion ( 1-0 ) probability as in [Church & Gale].
      * \endenglish
      */
-    static const double DEFAULT_PROB_10 = 0.0099;
+    static constexpr double DEFAULT_PROB_10 = 0.0099;
 
     /** 
      * \french
@@ -306,7 +306,7 @@ public :
      * Expension ( 1-2 ) probability as in [Church & Gale]. 
      * \endenglish
      */
-    static const double DEFAULT_PROB_12 = 0.089;
+    static constexpr double DEFAULT_PROB_12 = 0.089;
 
     /** 
      * \french
@@ -317,7 +317,7 @@ public :
      * Contraction ( 2-1 ) probability as in [Church & Gale].
      * \endenglish
      */
-    static const double DEFAULT_PROB_21 = 0.089;
+    static constexpr double DEFAULT_PROB_21 = 0.089;
 
     /** 
      * \french
@@ -328,7 +328,7 @@ public :
      * Merge ( 2-2 ) probability as in [Church & Gale].
      * \endenglish
      */
-    static const double DEFAULT_PROB_22 = 0.011;
+    static constexpr double DEFAULT_PROB_22 = 0.011;
  
     /** 
      * \french
@@ -340,7 +340,7 @@ public :
      * The average production as in [Church & Gale]. 
      * \endenglish
      */ 
-    static const double DEFAULT_PRODUCTION = 1;
+    static constexpr double DEFAULT_PRODUCTION = 1;
 
     /**
      * \french
@@ -355,7 +355,7 @@ public :
      * variance ).
      * \endenglish
      */
-    static const double DEFAULT_VARIANCE = 6.8;
+    static constexpr double DEFAULT_VARIANCE = 6.8;
     
     /** 
      * \french
@@ -366,7 +366,7 @@ public :
      * Default <em>match</em>'s weight.
      * \endenglish
      */
-    static const double DEFAULT_MATCH_WEIGHT  = 0.2;
+    static constexpr double DEFAULT_MATCH_WEIGHT  = 0.2;
 
     /** 
      * \french
@@ -377,7 +377,7 @@ public :
      * Default <em>penalty</em>'s weight.
      * \endenglish
      */
-    static const double DEFAULT_PENALTY_WEIGHT = 1;
+    static constexpr double DEFAULT_PENALTY_WEIGHT = 1;
 
 protected :    
     /**
